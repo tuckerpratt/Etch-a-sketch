@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Etch-a-Sketch</title>
+    <meta charset="UTF-8"/>
+    <style>
+        :root {
+            --columns: 16;
+            --rows: 16;
+        }
+
+        #buttonZone {
+            display: flex;
+            height: 50px;
+            justify-content: center;
+            align-content: center;
+            padding-bottom: 25px;
+        }
+
+        #reset {
+            color: blue;
+        }
+
+        #window_div {
+            display: grid;
+            min-width: 100vw;
+            min-height: 100vh;
+
+            grid-template-columns: repeat(var(--columns), 1fr);
+            grid-template-rows: repeat(var(--columns), 1fr);
+        }
+
+        .gridSquare {
+            width:auto;
+            height: auto;
+            background-color: blue;
+        }
+    </style>
+</head>
+<body>
+    <div id="buttonZone">
+        <button id="reset">Reset</button>
+    </div>
+    <script>
+
+        const window_div = document.createElement("div");
+        window_div.id = "window_div";
+        document.body.appendChild(window_div);
+
+        function resetGrid(rowAmount) {
+            document.documentElement.style.setProperty('--rows', parseInt(rowAmount));
+            document.documentElement.style.setProperty('--columns', parseInt(rowAmount));
+            window_div.style.gridTemplateColumns = "repeat(var(--columns), 1fr)";
+            window_div.style.gridTemplateRows = "repeat(var(--rows), 1fr)";
+
+            gridGenerate();
+
+            let gridList = document.querySelectorAll('.gridSquare');
+            gridList.forEach(element => {
+                element.style.backgroundColor = 'blue';
+            });
+        }
+
+        document.getElementById("reset").addEventListener("click", function(){
+            let input = prompt("How many rows and columns would you like? (Max 16)");
+                resetGrid(input);
+
+        });
+
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+            }
+
+        function gridGenerate() {
+            const columns = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--columns'));
+            const rows = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--rows'));
+
+
+        
+            for (c = 1; c <= columns; c++) {
+                for (r = 1; r <= rows; r++) {
+                    let newDiv = document.createElement('div');
+                    newDiv.id = 'r' + r + 'c' + c;
+                    newDiv.className = "gridSquare";
+                    newDiv.addEventListener("mouseenter", function() {
+                        newDiv.style.backgroundColor = getRandomColor();
+                    });
+
+                    window_div.appendChild(newDiv);
+                }
+            }
+        }
+
+        gridGenerate();        
+
+    </script>
+</body>
+
+</html>
